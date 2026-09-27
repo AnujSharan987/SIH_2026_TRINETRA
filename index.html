@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project Trinetra — Watershed AI & Remote Sensing Audit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="#" class="brand-logo">
+        <div class="brand-logo-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+          </svg>
+        </div>
+        TRINETRA &bull; Watershed Audit System
+      </a>
+      <span class="brand-tag">Sentinel-2 &bull; Gemini 3.6</span>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-container">
+      <div class="badge">Project Trinetra &bull; Automated Hydrology Pipeline</div>
+      <h1><span>Trinetra:</span> Watershed Impact & Ground Verification</h1>
+      <p>
+        Upload ground-level geotagged site imagery to verify conservation structures, trigger automated multi-temporal Sentinel-2 Earth Engine processing across 8 biophysical indices, and inspect ecological impact trends.
+      </p>
+    </div>
+  </section>
+
+  <!-- Main Work Area -->
+  <main class="main-content">
+    
+    <!-- Upload Card -->
+    <section class="card">
+      <h2 class="card-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+        </svg>
+        Step 1: Upload Field Image
+      </h2>
+      <p class="card-subtitle">Select or drop a field photograph containing watershed structures (Dam, Farm Pond, Check Dam, Contour Bunds) and EXIF GPS tags.</p>
+
+      <div class="drop-zone" id="dropZone">
+        <svg class="drop-icon" viewBox="0 0 24 24">
+          <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/>
+        </svg>
+        <div class="drop-text">Click to choose image or drag & drop here</div>
+        <div class="drop-subtext">Supports high-res JPEG, JPG, PNG</div>
+        <input type="file" id="fileInput" accept="image/*" />
+      </div>
+
+      <div class="preview-box" id="previewBox">
+        <div class="file-details">
+          <span style="color: var(--primary); font-size: 1.2rem;">&#128444;</span>
+          <span class="file-name" id="fileName">image.jpg</span>
+        </div>
+        <button type="button" class="remove-btn" id="removeBtn">Remove</button>
+      </div>
+
+      <button type="button" class="btn-submit" id="submitBtn" disabled>Run Full Audit Pipeline</button>
+    </section>
+
+    <!-- Loading State -->
+    <div class="loader-wrap" id="loader">
+      <div class="spinner"></div>
+      <div class="loader-text">Analyzing ground features & querying Sentinel-2 constellations...</div>
+      <div class="loader-sub">Computing pre/post monsoon indices (NDVI, NDWI, SAVI, EVI, MNDWI, NDMI, NDRE, NMDI) and generating synthesis...</div>
+    </div>
+
+    <!-- Results Section -->
+    <section id="resultsSection">
+      
+      <!-- Status Box -->
+      <div class="status-banner" id="statusBanner">
+        <span id="statusText">PIPELINE EXECUTION: SUCCESS</span>
+        <span id="validityTag" style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase;">Structure Verified</span>
+      </div>
+
+      <!-- Ground Truth & Coordinates -->
+      <div class="card">
+        <h2 class="card-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          Ground Verification & Geo-Position
+        </h2>
+        <div class="grid-2" style="margin-top: 20px;">
+          <div class="metric-group">
+            <div class="metric-label">Detected Structures</div>
+            <div class="tags-container" id="structuresContainer"></div>
+            
+            <div class="metric-label" style="margin-top: 18px;">Confidence Score</div>
+            <div class="metric-value" id="confScore">--</div>
+          </div>
+          <div class="metric-group">
+            <div class="metric-label">Site Coordinates (EXIF / Fallback)</div>
+            <div class="metric-value" style="font-family: 'JetBrains Mono', monospace;" id="coordDisplay">--</div>
+            
+            <div class="metric-label" style="margin-top: 18px;">Visual Reasoning</div>
+            <p style="font-size: 0.92rem; color: var(--text-main); margin-top: 4px;" id="reasoningText">--</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Earth Engine Metrics -->
+      <div class="card" id="geeMetricsCard">
+        <h2 class="card-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+          </svg>
+          Sentinel-2 Multi-Parameter Remote Sensing Indices 
+        </h2>
+        <p class="card-subtitle">Zonal mean calculations within a 1,000-meter buffer radius of the structure. <strong>Click any map below to enlarge.</strong></p>
+
+        <!-- Dynamic Metrics Grid -->
+        <div class="stat-row" id="statsGrid"></div>
+
+        <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 14px; color: var(--text-main);">Spatial Composites (Click to expand)</h3>
+        <div class="gallery-grid" id="galleryGrid">
+          <div class="gallery-card" onclick="openModal('rgbImg', 'Post-Composite (Sentinel-2 RGB True Color)')">
+            <img id="rgbImg" src="" alt="True Color RGB" />
+            <div class="gallery-label">
+              <span>RGB True Color</span>
+              <span class="click-hint">&#128269; Zoom</span>
+            </div>
+          </div>
+          <div class="gallery-card" onclick="openModal('ndviImg', 'Vegetation Index (NDVI Spectral Analysis)')">
+            <img id="ndviImg" src="" alt="NDVI Spectral Map" />
+            <div class="gallery-label">
+              <span>NDVI Map</span>
+              <span class="click-hint">&#128269; Zoom</span>
+            </div>
+          </div>
+          <div class="gallery-card" onclick="openModal('saviImg', 'Soil-Adjusted Vegetation Index (SAVI)')">
+            <img id="saviImg" src="" alt="SAVI Spectral Map" />
+            <div class="gallery-label">
+              <span>SAVI Map</span>
+              <span class="click-hint">&#128269; Zoom</span>
+            </div>
+          </div>
+          <div class="gallery-card" onclick="openModal('ndwiImg', 'Moisture Index (NDWI Water & Moisture Analysis)')">
+            <img id="ndwiImg" src="" alt="NDWI Water Map" />
+            <div class="gallery-label">
+              <span>NDWI Map</span>
+              <span class="click-hint">&#128269; Zoom</span>
+            </div>
+          </div>
+          <div class="gallery-card" onclick="openModal('mndwiImg', 'Modified NDWI (Open Water Contrast)')">
+            <img id="mndwiImg" src="" alt="MNDWI Spectral Map" />
+            <div class="gallery-label">
+              <span>MNDWI Map</span>
+              <span class="click-hint">&#128269; Zoom</span>
+            </div>
+          </div>
+          <div class="gallery-card" onclick="openModal('ndmiImg', 'Canopy Moisture Index (NDMI)')">
+            <img id="ndmiImg" src="" alt="NDMI Spectral Map" />
+            <div class="gallery-label">
+              <span>NDMI Map</span>
+              <span class="click-hint">&#128269; Zoom</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Expert Assessment -->
+      <div class="card">
+        <h2 class="card-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10 9 9 9 8 9"/>
+          </svg>
+          Technical Audit & Gemini Synthesis
+        </h2>
+        <div class="eval-box" id="evaluationText"></div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Big Image Modal (Lightbox) -->
+  <div class="image-modal" id="imageModal">
+    <div class="modal-content-wrapper" onclick="event.stopPropagation()">
+      <button class="modal-close-btn" id="modalCloseBtn">&times;</button>
+      <img id="modalImg" class="modal-img" src="" alt="Enlarged Map View" />
+      <div class="modal-caption" id="modalCaption"></div>
+    </div>
+  </div>
+
+  <script src="/static/script.js"></script>
+</body>
+</html>
