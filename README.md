@@ -66,7 +66,9 @@ Trinetra combines AI-based image verification, EXIF metadata extraction, and sat
 ## 🏗️ System Architecture
 
 Trinetra follows an integrated AI and geospatial processing architecture.
-<img width="2116" height="3682" alt="mermaid-diagram (4)" src="https://github.com/user-attachments/assets/94fdb3c5-bf9b-41a4-909b-f802f1def52c" />
+<img width="1066" height="1952" alt="mermaid-diagram (6)" src="https://github.com/user-attachments/assets/1b3ca130-80d7-49ce-bb43-2aebe590d0a1" />
+
+
 
 ## 🖥️ Application Preview
 
