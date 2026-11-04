@@ -71,14 +71,16 @@ Trinetra follows an integrated AI and geospatial processing architecture.
 ## 🖥️ Application Preview
 
 ### 1. Ground Verification & Geo-Position
-![Ground Verification](screenshots/ground-verification.png)
+
+![Ground Verification](./screenshots/trinetra_screenshot_1_2x.png)
 
 ### 2. Technical Audit & Gemini Synthesis
-![AI Audit Results](screenshots/technical-audit.png)
+
+![Technical Audit](./screenshots/trinetra_screenshot_2_2x.png)
 
 ### 3. Sentinel-2 Remote Sensing Analysis
-![Remote Sensing Dashboard](screenshots/remote-sensing.png)
 
+![Remote Sensing Dashboard](./screenshots/trinetra_screenshot_3_2x.png)
 ---
 
 
